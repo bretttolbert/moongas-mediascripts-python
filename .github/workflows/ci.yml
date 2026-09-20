@@ -20,8 +20,20 @@ jobs:
       matrix:
         python-version: ["3.11", "3.12", "3.13", "3.14"]
     steps:
-      - name: Check out repository
+      - name: Check out this repository
         uses: actions/checkout@v4
+
+      - name: Check out moongas-mediascan-python
+        uses: actions/checkout@v4
+        with:
+          repository: 'bretttolbert/moongas-mediascan-python'
+          path: 'moongas-mediascan-python'
+
+      - name: Check out moongas-mediatest-python-pytest
+        uses: actions/checkout@v4
+        with:
+          repository: 'bretttolbert/moongas-mediatest-python-pytest'
+          path: 'moongas-mediatest-python-pytest'
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -29,8 +41,16 @@ jobs:
           python-version: ${{ matrix.python-version }}
           cache: pip
 
-      - name: Install test dependencies
-        run: python -m pip install --upgrade pip && python -m pip install ".[dev]"
+      - name: Upgrade Pip
+        run: |
+          python -m pip install --upgrade pip
+
+      - name: Install Local Python Packages
+        run: |
+          python -m pip install pandas-stubs
+          python -m pip install --force-reinstall -e ./moongas-mediascan-python
+          python -m pip install --force-reinstall -e ./moongas-mediatest-python-pytest
+          python -m pip install --force-reinstall -e .[dev,llm,stats]
 
       - name: Run tests
         run: python -m pytest

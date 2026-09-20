@@ -41,7 +41,8 @@ classifiers = [
 ]
 
 dependencies = [
-  "mediascan >= 1.2.1"
+  "mediascan >= 1.2.1",
+  "mediatest >= 1.2.1"
 ]
 
 [project.scripts]
@@ -93,8 +94,8 @@ mediascan = ['py.typed']
 scripts = ['shell/*.sh']
 
 [tool.setuptools.packages.find]
-where = ["src", "."]
-include = ["mediascripts*"]
+where = ["src"]
+include = ["mediascripts"]
 
 [tool.pytest.ini_options]
 pythonpath = [
