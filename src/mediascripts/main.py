@@ -2,8 +2,11 @@
 
 import argparse
 import importlib.metadata
+import logging
 import shutil
 from pathlib import Path
+
+logger = logging.getLogger(__name__)
 
 
 def create_script_symlinks(dest_dir: Path):
@@ -21,14 +24,21 @@ def create_script_symlinks(dest_dir: Path):
             continue
         command_path = shutil.which(ep.name)
         if command_path is None:
-            print(f"  warning: {ep.name} not found on PATH, skipping")
+            logger.warning("%s not found on PATH, skipping", ep.name)
             continue
         dest = dest_dir / ep.name
-        if dest.exists() or dest.is_symlink():
-            print(f"  skipping {dest.name} (already exists)")
-            continue
+        if dest.exists():
+            if dest.is_symlink():
+                dest.unlink()
+                logger.info("removed existing symlink %s", dest.name)
+            else:
+                logger.warning(
+                    "skipping %s (destination already exists and is not a symlink)",
+                    dest.name,
+                )
+                continue
         dest.symlink_to(command_path)
-        print(f"  {dest.name} -> {command_path}")
+        logger.info("%s -> %s", dest.name, command_path)
 
     # Symlink every shell script in scripts/shell with hyphenated name
     if shell_dir.is_dir():
@@ -36,12 +46,12 @@ def create_script_symlinks(dest_dir: Path):
             name = shell_script.stem.replace("_", "-")
             dest = dest_dir / name
             if dest.exists() or dest.is_symlink():
-                print(f"  skipping {dest.name} (already exists)")
+                logger.info("skipping %s (already exists)", dest.name)
                 continue
             dest.symlink_to(shell_script)
-            print(f"  {dest.name} -> {shell_script}")
+            logger.info("%s -> %s", dest.name, shell_script)
     else:
-        print(f"  warning: shell script directory not found: {shell_dir}")
+        logger.warning("shell script directory not found: %s", shell_dir)
 
 
 def list_media_scripts():
@@ -69,6 +79,7 @@ def list_media_scripts():
 
 
 def main():
+    logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
     parser = argparse.ArgumentParser(
         description="Utility for media* console script entry points."
     )
