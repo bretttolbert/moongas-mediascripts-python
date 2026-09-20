@@ -5,8 +5,8 @@ from pathlib import Path
 
 import pytest
 
-from scripts.convert.convert_covers import convert_medialibs_cover_images_inplace
-from scripts.copy.copy_medialib import (
+from mediascripts.convert.convert_covers import convert_medialibs_cover_images_inplace
+from mediascripts.copy.copy_medialib import (
     DirCopyMode,
     copy_medialib,
     copy_medialibs,

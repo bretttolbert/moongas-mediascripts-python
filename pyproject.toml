@@ -10,7 +10,7 @@ authors = [{ name = "Brett Tolbert", email = "bretttolbert@gmail.com" }]
 maintainers = [{ name = "Brett Tolbert", email = "bretttolbert@gmail.com" }]
 description = "Python scripts for working with Moongas media collections."
 readme = "README.md"
-license = { file = "LICENSE.txt" }
+license = { file = "LICENSE" }
 keywords = [
   "moongas", 
   "mediascan", 
@@ -47,22 +47,22 @@ dependencies = [
 
 [project.scripts]
 mediascripts = "mediascripts.__main__:main"
-artist-countries-to-mapgraph-json = "artist.artist_mapgraph.artist_countries_to_mapgraph_json:main"
-artist-csv-to-artist-yaml = "artist.artist_csv_to_yaml.artist_csv_to_artist_yaml:main"
-artist-yaml-auto-populate = "artist.artist_yaml.artist_yaml_auto_populate:main"
-artist-yaml-reformat-with-files-yaml = "artist.artist_yaml.artist_yaml_reformat_with_files_yaml:main"
-artist-yaml-test-with-files-yaml = "artist.artist_yaml.artist_yaml_test_with_files_yaml:main"
-convert-covers = "convert.convert_covers:main"
-convert-videos = "convert.convert_videos:main"
-copy-medialib = "copy.copy_medialib:main"
-generate-dataclasses = "dev.generate_dataclasses:main"
-genre-clusters = "stats.genre_clusters:main"
-list-artists-from-files-yaml = "media_files_yaml.list_artists_from_files_yaml:main"
-list-missing-region-names = "artist.artist_mapgraph.list_missing_region_names:main"
-make-covers-video = "convert.make_covers_video:main"
-mediastats = "stats.mediastats:main"
-play-rand-file-from-files-yaml = "media_files_yaml.play_rand_file_from_files_yaml:main"
-rename-album-files = "rename.rename_album_files:main"
+artist-countries-to-mapgraph-json = "mediascripts.artist.artist_mapgraph.artist_countries_to_mapgraph_json:main"
+artist-csv-to-artist-yaml = "mediascripts.artist.artist_csv_to_yaml.artist_csv_to_artist_yaml:main"
+artist-yaml-auto-populate = "mediascripts.artist.artist_yaml.artist_yaml_auto_populate:main"
+artist-yaml-reformat-with-files-yaml = "mediascripts.artist.artist_yaml.artist_yaml_reformat_with_files_yaml:main"
+artist-yaml-test-with-files-yaml = "mediascripts.artist.artist_yaml.artist_yaml_test_with_files_yaml:main"
+convert-covers = "mediascripts.convert.convert_covers:main"
+convert-videos = "mediascripts.convert.convert_videos:main"
+copy-medialib = "mediascripts.copy.copy_medialib:main"
+generate-dataclasses = "mediascripts.dev.generate_dataclasses:main"
+genre-clusters = "mediascripts.stats.genre_clusters:main"
+list-artists-from-files-yaml = "mediascripts.media_files_yaml.list_artists_from_files_yaml:main"
+list-missing-region-names = "mediascripts.artist.artist_mapgraph.list_missing_region_names:main"
+make-covers-video = "mediascripts.convert.make_covers_video:main"
+mediastats = "mediascripts.stats.mediastats:main"
+play-rand-file-from-files-yaml = "mediascripts.media_files_yaml.play_rand_file_from_files_yaml:main"
+rename-album-files = "mediascripts.rename.rename_album_files:main"
 
 [project.optional-dependencies]
 dev = [
@@ -91,12 +91,11 @@ Repository = "https://github.com/bretttolbert/moongas-mediasripts-python.git"
 Changelog = "https://github.com/bretttolbert/moongas-mediasripts-python/blob/master/CHANGELOG.md"
 
 [tool.setuptools.package-data]
-mediascan = ['py.typed']
-scripts = ['shell/*.sh']
+mediascripts = ['py.typed', 'shell/*.sh']
 
 [tool.setuptools.packages.find]
 where = ["src"]
-include = ["mediascripts"]
+include = ["mediascripts*"]
 
 [tool.pytest.ini_options]
 pythonpath = [

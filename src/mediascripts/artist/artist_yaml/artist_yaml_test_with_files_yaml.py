@@ -2,8 +2,8 @@ import argparse
 import os
 from pathlib import Path
 
-from mediascripts.artist_yaml_file_validator import validate_artist_yaml_file
-from mediascripts.media_files_yaml_file_loader import load_media_files_yaml_file
+from mediascan.artist_yaml_file_validator import validate_artist_yaml_file
+from mediascan.media_files_yaml_file_loader import load_media_files_yaml_file
 
 """
 Tests whether media library artist dirs have valid artists.yml file

@@ -29,8 +29,8 @@ from dataclass_wizard.v0.errors import MissingFields
 from openai import APIStatusError, OpenAI
 from tqdm import tqdm
 
-from mediascripts.artist_yaml_file import ArtistYamlFile
-from mediascripts.artist_yaml_file_validator import (
+from mediascan.artist_yaml_file import ArtistYamlFile
+from mediascan.artist_yaml_file_validator import (
     validate_artist_yaml_content,
     validate_artist_yaml_file,
 )

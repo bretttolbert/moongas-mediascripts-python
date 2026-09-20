@@ -5,8 +5,8 @@ from typing import Mapping, Union, cast
 
 import pandas as pd
 
-from mediascripts.artist_data import ArtistData, ArtistMember, Date
-from mediascripts.artist_yaml_file import ArtistYamlFile
+from mediascan.artist_data import ArtistData, ArtistMember, Date
+from mediascan.artist_yaml_file import ArtistYamlFile
 
 """
 Generates artist.yml files from artist data CSV files

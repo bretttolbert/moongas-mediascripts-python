@@ -2,7 +2,7 @@ import argparse
 import random
 import subprocess
 
-from mediascripts.media_files_yaml_file_loader import load_media_files_yaml_file
+from mediascan.media_files_yaml_file_loader import load_media_files_yaml_file
 
 """
 Reads yaml file output by mediascan and plays a random file

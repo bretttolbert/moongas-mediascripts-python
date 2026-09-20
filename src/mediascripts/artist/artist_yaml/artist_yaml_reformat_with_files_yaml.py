@@ -5,8 +5,8 @@ Batch modify artist.yml files to make changes to the yaml format
 import argparse
 from pathlib import Path
 
-from mediascripts.artist_yaml_file_loader import load_artist_yaml_file
-from mediascripts.media_files_yaml_file_loader import load_media_files_yaml_file
+from mediascan.artist_yaml_file_loader import load_artist_yaml_file
+from mediascan.media_files_yaml_file_loader import load_media_files_yaml_file
 
 """
 Converts artist.yml files from one format to another

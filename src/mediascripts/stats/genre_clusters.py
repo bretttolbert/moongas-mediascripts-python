@@ -3,7 +3,7 @@ import argparse
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.cluster import KMeans
 
-from mediascripts.genres import Genre
+from mediascan.genres import Genre
 
 """
 Note: I used this script to generate some of the genre cluster links

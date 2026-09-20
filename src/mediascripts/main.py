@@ -27,16 +27,15 @@ def create_script_symlinks(dest_dir: Path):
             logger.warning("%s not found on PATH, skipping", ep.name)
             continue
         dest = dest_dir / ep.name
-        if dest.exists():
-            if dest.is_symlink():
-                dest.unlink()
-                logger.info("removed existing symlink %s", dest.name)
-            else:
-                logger.warning(
-                    "skipping %s (destination already exists and is not a symlink)",
-                    dest.name,
-                )
-                continue
+        if dest.is_symlink():
+            dest.unlink()
+            logger.info("removed existing symlink %s", dest.name)
+        elif dest.exists():
+            logger.warning(
+                "skipping %s (destination already exists and is not a symlink)",
+                dest.name,
+            )
+            continue
         dest.symlink_to(command_path)
         logger.info("%s -> %s", dest.name, command_path)
 
@@ -45,8 +44,14 @@ def create_script_symlinks(dest_dir: Path):
         for shell_script in sorted(shell_dir.glob("*.sh")):
             name = shell_script.stem.replace("_", "-")
             dest = dest_dir / name
-            if dest.exists() or dest.is_symlink():
-                logger.info("skipping %s (already exists)", dest.name)
+            if dest.is_symlink():
+                dest.unlink()
+                logger.info("removed existing symlink %s", dest.name)
+            elif dest.exists():
+                logger.warning(
+                    "skipping %s (destination already exists and is not a symlink)",
+                    dest.name,
+                )
                 continue
             dest.symlink_to(shell_script)
             logger.info("%s -> %s", dest.name, shell_script)

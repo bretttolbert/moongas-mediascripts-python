@@ -3,7 +3,7 @@ import json
 from pathlib import Path
 from typing import Set
 
-from mediascripts.artists_yaml_file_loader import load_artists_yaml_file
+from mediascan.artists_yaml_file_loader import load_artists_yaml_file
 
 
 def main():
