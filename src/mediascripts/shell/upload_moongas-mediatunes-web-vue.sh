@@ -1,6 +1,6 @@
 #!/bin/bash
 set -euo pipefail
-HOST=$MEDIASERVER_DROPLET_IP
+HOST=$MOONGAS_REMOTE_SERVER_IP
 DEST_USER=root
 DEST_ROOT=/var/www/moongas
 SVC=moongas-mediatunes-web-vue

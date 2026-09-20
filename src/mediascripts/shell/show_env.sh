@@ -1,12 +1,14 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 set -euo pipefail
 
-echo "|------------------------------------------------------------------------|"
-echo "|                     Moongas Environment                                |"
-echo "|------------------------------------------------------------------------|"
-echo "| MOONGAS_COLLECTION_ROOTDIR:                                            "
-echo "|   \"${MOONGAS_COLLECTION_ROOTDIR:-}\"                                  "
-echo "| MOONGAS_SERVER_IP:                                                     "
-echo "|   \"${MOONGAS_SERVER_IP:-}\"                                           "
-echo "|------------------------------------------------------------------------|"
+cat << EOF
+------------------------------------------------------------------------------
+                             Moongas Environment                              
+------------------------------------------------------------------------------
+  MOONGAS_COLLECTION_ROOTDIR:
+    "${MOONGAS_COLLECTION_ROOTDIR:-}"
+  MOONGAS_REMOTE_SERVER_IP:
+    "${MOONGAS_REMOTE_SERVER_IP:-}"
+------------------------------------------------------------------------------
+EOF
