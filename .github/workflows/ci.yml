@@ -39,7 +39,6 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-          cache: pip
 
       - name: Upgrade Pip
         run: |
@@ -50,7 +49,7 @@ jobs:
           python -m pip install pandas-stubs
           python -m pip install --force-reinstall -e ./moongas-mediascan-python
           python -m pip install --force-reinstall -e ./moongas-mediatest-python-pytest
-          python -m pip install --force-reinstall -e .[dev,llm,stats]
+          python -m pip install -e .[dev,llm,stats]
 
       - name: Run tests
         run: python -m pytest
