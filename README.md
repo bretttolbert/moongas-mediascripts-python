@@ -47,8 +47,10 @@ python -m pip install -e ".[dev,llm,stats]"
 
 # Usage
 
+The `mediascripts` package installs a console script named `mediascripts` so it can be executed either with `python -m mediascripts` or simply with `mediascripts`.
+
 ```bash
-$ python -m mediascripts --h
+$ mediascripts --h
 usage: mediascripts [-h] [--list] [--create-script-symlinks]
 
 Utility for media* console script entry points.
@@ -59,6 +61,10 @@ options:
   --create-script-symlinks
                         create hyphenated symlinks in the current directory to every console entry script and every shell script in
                         scripts/shell
+```
+
+The `--list` option may be used to list all console scripts and shell scripts installed by any `media*` packages.
+```bash
 $ mediascripts --list
 artist:
   artist-countries-to-mapgraph-json
@@ -84,3 +90,18 @@ stats:
   genre-clusters
   mediastats
 ```
+
+## `show-env` - Show Moongas Environment Variables
+```bash
+brett@pentatonic:~/Git/bretttolbert/moongas/moongas-collection-local$ ./show-env 
+------------------------------------------------------------------------------
+                             Moongas Environment                              
+------------------------------------------------------------------------------
+  MOONGAS_COLLECTION_ROOTDIR:
+    "/home/brett/Git/bretttolbert/moongas/moongas-collection-local"
+  MOONGAS_REMOTE_SERVER_IP:
+    "159.89.93.193"
+------------------------------------------------------------------------------
+
+```
+
