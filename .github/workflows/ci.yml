@@ -1,6 +1,3 @@
-# This workflow installs Python dependencies, runs tests, and lints across Python versions.
-# For details see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
-
 name: CI
 
 on:
@@ -51,8 +48,15 @@ jobs:
           python -m pip install -e ./moongas-mediatest-python-pytest
           python -m pip install -e .[dev,llm,stats]
 
-      - name: Run tests
+      - name: Run pytest
         run: python -m pytest
+
+      - name: Upload pytest results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pytest-results-py${{ matrix.python-version }}
+          path: test-results/pytest.xml
 
       - name: Lint with ruff
         run: |
@@ -60,16 +64,16 @@ jobs:
 
   build:
     name: Build package
-    needs: test
+    needs: [test]
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Set up Python ${{ matrix.python-version }}
+      - name: Set up Python 3.13
         uses: actions/setup-python@v5
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: "3.13"
 
       - name: Install build
         run: python -m pip install --upgrade build
@@ -77,11 +81,11 @@ jobs:
       - name: Build package
         run: python -m build
 
-      - name: Upload package artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: dist
-          path: dist/
+  #    - name: Upload package artifacts
+  #      uses: actions/upload-artifact@v4
+  #      with:
+  #        name: dist
+  #        path: dist/
 
   # publish:
   #   name: Publish package
