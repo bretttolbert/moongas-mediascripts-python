@@ -6,6 +6,5 @@ copy-medialib \
   --dst-path "$MOONGAS_COLLECTION_DEMO/data/" \
   --include-filenames "*.lrc" "*.txt" \
   --dir-copy-mode PreserveStructure \
-  --overwrite-existing 
-#\
-#  --dry-run
+  --overwrite-existing \
+  "$@"

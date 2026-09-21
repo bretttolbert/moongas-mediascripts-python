@@ -29,7 +29,8 @@ copy-medialib \
   --src-paths /data/Music /data/MusicOther \
   --dst-path /data/Covers \
   --include-filenames cover.jpg \
-  --dir-copy-mode PreserveStructure
+  --dir-copy-mode PreserveStructure  \
+  "$@"
 
 # Step 2: Convert JPEG (.jpg) image files to WEBP (.webp) in-place
 
@@ -69,4 +70,5 @@ convert-covers \
   --resolution 1000x1000 \
   --quality 80 \
   --archive-src /data/Covers/ \
-  --archive-dst /data/Covers.tar.gz
+  --archive-dst /data/Covers.tar.gz \
+  "$@"
