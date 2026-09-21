@@ -4,6 +4,6 @@ set -euo pipefail
 copy-medialib \
   --src-paths "$MOONGAS_COLLECTION_LOCAL/data/Music" \
   --dst-path "$MOONGAS_COLLECTION_DEMO/data/" \
-  --include-filenames *.yml \
+  --include-filenames "*.yml" \
   --dir-copy-mode PreserveStructure \
   --overwrite-existing
