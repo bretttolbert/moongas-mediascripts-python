@@ -11,7 +11,7 @@ from typing import NamedTuple
 
 from tqdm import tqdm
 
-from mediascan.utils.log import log_arguments
+from mediascan.utils.log.log_arguments import log_arguments
 
 log = logging.getLogger(__name__)
 
