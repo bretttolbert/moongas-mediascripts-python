@@ -15,18 +15,19 @@ import re
 
 from mediascan.utils.path.album_path import AlbumPath, AlbumPathBuilder
 
-
 # Matches standard emoji ranges, symbols, and variation selectors e.g. '🔄'
-emoji_pattern = re.compile(
-    r"\s*[\U0001F000-\U0001FFFF\u2600-\u27BF\u2300-\u23FF]\s*"
-)
+emoji_pattern = re.compile(r"\s*[\U0001F000-\U0001FFFF\u2600-\u27BF\u2300-\u23FF]\s*")
 
 # pattern/substitution
 patterns: list[tuple[re.Pattern[str], str]] = [
     (re.compile(r"\s*\[.*?\]"), ""),
-    (re.compile(r"ft_"), "ft"),
-    (re.compile(r"ft\."), "ft"),
+    (re.compile(r"ft_?"), "ft"),
+    (re.compile(r"ft\.?"), "ft"),
+    (re.compile(r"feat\.?"), "ft"),
+    (re.compile(r"feature\.?"), "ft"),
+    (re.compile(r"featuring"), "ft"),
     (re.compile(r"\.(?!.{3}$)"), "_"),
+    (re.compile(r"‐"), "-"),
     (re.compile(r"’"), "'"),
     (re.compile(r"´"), "'"),
     (re.compile(r"“"), '"'),
@@ -41,30 +42,36 @@ patterns: list[tuple[re.Pattern[str], str]] = [
     (re.compile(rf"\s*(?:{emoji_pattern.pattern})\s*"), ""),
 ]
 
+
+def update_filename(filename: str, artist_dirname: str) -> str:
+    updated_filename = filename
+    # Apply all applicable replacements, then add the updated filename
+    # to the rename tasks queue (if any updates were made)
+
+    # Add custom patterns
+
+    # Custom pattern #1
+    # Remove artist name e.g. " - Lil Wayne"
+    # E.g. "03 - Lil Wayne - MegaMan.mp3" -> "03 - MegaMan.mp3"
+    patterns.append(
+        (
+            re.compile(r"\s*-?\s*" + re.escape(artist_dirname)),
+            "",
+        )
+    )
+
+    # Perform regex pattern/sub replacements
+    for pattern, replacement in patterns:
+        if re.search(pattern, filename):
+            updated_filename = re.sub(pattern, replacement, updated_filename)
+    return updated_filename
+
+
 def prepare_rename_tasks(album_path: AlbumPath) -> list[tuple[str, str]]:
-    rename_tasks : list[tuple[str, str]] = []
+    rename_tasks: list[tuple[str, str]] = []
     for _, _, files in os.walk(album_path.path):
         for filename in files:
-            updated_filename = filename
-            # Apply all applicable replacements, then add the updated filename
-            # to the rename tasks queue (if any updates were made)
-
-            # Add custom patterns
-
-            # Custom pattern #1
-            # Remove artist name e.g. " - Lil Wayne"
-            # E.g. "03 - Lil Wayne - MegaMan.mp3" -> "03 - MegaMan.mp3"
-            patterns.append(
-                (
-                    re.compile(r"\s*-?\s*" + re.escape(album_path.artist_dirname)),
-                    "",
-                )
-            )
-
-            # Perform regex pattern/sub replacements
-            for pattern, replacement in patterns:
-                if re.search(pattern, filename):
-                    updated_filename = re.sub(pattern, replacement, updated_filename)
+            updated_filename = update_filename(filename, album_path.artist_dirname)
 
             # Finally, append a rename task if any updates were made
             if updated_filename != filename:
@@ -79,7 +86,10 @@ def perform_rename_tasks(
 ) -> None:
     for original, updated in rename_tasks:
         if not dry_run:
-            os.rename(os.path.join(album_path.path, original), os.path.join(album_path.path, updated))
+            os.rename(
+                os.path.join(album_path.path, original),
+                os.path.join(album_path.path, updated),
+            )
         print(f'Renamed "{original}" -> "{updated}"')
 
 
@@ -109,7 +119,7 @@ def main():
         action="store_true",
         help="Simulate actions without making actual file changes",
     )
-    
+
     args = parser.parse_args()
     rename_album_files(args.directory, dry_run=args.dry_run)
 
