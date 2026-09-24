@@ -1,6 +1,5 @@
 #!/bin/bash
 set -euo pipefail
 
-pushd moongas-mediascan-go > /dev/null
-go run cmd/scan-to-db "$MOONGAS_COLLECTION_ROOTDIR/mediascan-config.yml" "$MOONGAS_COLLECTION_ROOTDIR/mediascan.db"
-popd > /dev/null
+MGCROOT="$MOONGAS_COLLECTION_ROOTDIR"
+go -C "$MGCROOT/moongas-mediascan-go" run ./cmd/scan-to-db "$MGCROOT/mediascan-config.yml" "$MGCROOT/mediascan.db" "$MGCROOT"

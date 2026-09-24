@@ -1,4 +1,5 @@
 #!/bin/bash
+# Updates everything and uploads to the active remote Moongas server
 set -euo pipefail
 ./scan-to-files-yaml
 ./scan-to-artists-yaml
