@@ -7,4 +7,5 @@ copy-medialib \
   --include-filenames "*.yml" \
   --dir-copy-mode PreserveStructure \
   --overwrite-existing \
+  --diff \
   "$@"

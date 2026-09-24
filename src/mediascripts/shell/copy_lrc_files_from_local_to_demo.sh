@@ -7,4 +7,5 @@ copy-medialib \
   --include-filenames "*.lrc" "*.txt" \
   --dir-copy-mode PreserveStructure \
   --overwrite-existing \
+  --diff \
   "$@"

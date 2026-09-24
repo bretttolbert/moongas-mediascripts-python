@@ -3,7 +3,9 @@ import fnmatch
 import hashlib
 import logging
 import os
+import shlex
 import shutil
+import subprocess
 import sys
 from enum import Enum
 from pathlib import Path
@@ -49,6 +51,32 @@ def _files_are_identical(first_path: Path, second_path: Path) -> bool:
     return file_hash(first_path) == file_hash(second_path)
 
 
+def _log_pending_change(src_path: Path, dst_path: Path, diff: bool = False) -> None:
+    """Log a copy/paste-able meld command at INFO and the diff at INFO if diff else DEBUG."""
+    action = "modify" if dst_path.exists() else "create"
+    log.info(
+        f"{action}: meld {shlex.quote(str(src_path))} {shlex.quote(str(dst_path))}"
+    )
+    diff_level = logging.INFO if diff else logging.DEBUG
+    if not log.isEnabledFor(diff_level):
+        return
+    diff_target = dst_path if dst_path.exists() else Path(os.devnull)
+    try:
+        result = subprocess.run(
+            ["diff", "-u", str(diff_target), str(src_path)],
+            capture_output=True,
+            text=True,
+            errors="replace",
+        )
+    except OSError as e:
+        log.log(diff_level, f"Could not diff '{src_path}' and '{diff_target}': {e}")
+        return
+    if result.stdout:
+        log.log(diff_level, f"Diff for '{dst_path}':\n{result.stdout}")
+    if result.stderr:
+        log.log(diff_level, f"diff stderr for '{dst_path}': {result.stderr.strip()}")
+
+
 @log_arguments
 def copy_medialib(
     src_path: Path,
@@ -60,6 +88,7 @@ def copy_medialib(
     overwrite_existing: bool = False,
     overwrite_newer: bool = False,
     make_track_yml: bool = False,
+    diff: bool = False,
 ) -> CopyResults:
     """
     Recursively copy files (e.g. album cover images) from src medialib directory
@@ -123,8 +152,7 @@ def copy_medialib(
             src_file_abs_path = Path(root).joinpath(src_fname)
             # skip any files not matching at least one include filename glob pattern
             if not any(
-                fnmatch.fnmatch(src_fname, pattern)
-                for pattern in include_filenames
+                fnmatch.fnmatch(src_fname, pattern) for pattern in include_filenames
             ):
                 log.debug(
                     f"Skipping file '{src_file_abs_path}' because its filename is not included"
@@ -223,7 +251,7 @@ def copy_medialib(
         unit=" files",
         disable=not sys.stderr.isatty(),
     ):
-        log.debug(f"Copying '{src_file_abs_path}' to '{dst_abs_path}'")
+        _log_pending_change(src_file_abs_path, dst_abs_path, diff=diff)
         if not dry_run:
             if make_track_yml:
                 dst_abs_path.write_text("")
@@ -245,6 +273,7 @@ def copy_medialibs(
     overwrite_existing: bool = False,
     overwrite_newer: bool = False,
     make_track_yml: bool = False,
+    diff: bool = False,
 ) -> CopyResults:
     """
     Copies files* from one or more medialib directories from src directory to
@@ -289,6 +318,7 @@ def copy_medialibs(
             overwrite_existing=overwrite_existing,
             overwrite_newer=overwrite_newer,
             make_track_yml=make_track_yml,
+            diff=diff,
         )
         log.info(
             f"Total copied for medialib dir {src_path}: would be copied: {ret_tmp.would_be_copied}; actually copied: {ret_tmp.actually_copied}; skipped: {ret_tmp.skipped}; errors: {ret_tmp.errors};"
@@ -391,6 +421,11 @@ def parse_args():
         help="Instead of copying files, create an empty .yml file per included file (same base name).",
     )
     parser.add_argument(
+        "--diff",
+        action="store_true",
+        help="Log the diff of each created/modified file at INFO level instead of DEBUG.",
+    )
+    parser.add_argument(
         "--log-level",
         type=str.upper,
         choices=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"],
@@ -419,6 +454,7 @@ def main():
         dir_copy_mode=args.dir_copy_mode,
         overwrite_newer=args.overwrite_newer,
         make_track_yml=args.make_track_yml,
+        diff=args.diff,
     )
 
 

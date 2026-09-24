@@ -7,4 +7,5 @@ copy-medialib \
   --include-filenames "*.mp3" "*.m4a" \
   --dir-copy-mode PreserveStructure \
   --make-track-yml \
+  --diff \
   "$@"

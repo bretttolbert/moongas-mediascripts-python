@@ -7,4 +7,5 @@ copy-medialib \
   --include-filenames artist.yml \
   --dir-copy-mode PreserveStructure \
   --overwrite-existing \
+  --diff \
   "$@"
